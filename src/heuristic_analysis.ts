@@ -2,7 +2,7 @@
 /* Currently only includes Azure domains. 
 
 TODO: Load list of domains from can-i-take-over-xyz fingerprints.json */
-const list_of_domain: string[][] = [
+const listOfDomain: string[][] = [
     [".cloudapp.net", "vulnerable"],
     [".cloudapp.azure.com", "vulnerable"],
     [".azurewebsites.net", "vulnerable"],
@@ -32,7 +32,7 @@ export function matchDomain(domain: string) {
         return -1;
     }
 
-    for (let d of list_of_domain) {
+    for (let d of listOfDomain) {
         if (domain.indexOf(d[0]) > -1)
             return 1;
     }
