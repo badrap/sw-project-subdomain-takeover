@@ -1,1 +1,1 @@
-//export {X, Y} from './heuristic_analysis'
+export * from './heuristic_analysis'
