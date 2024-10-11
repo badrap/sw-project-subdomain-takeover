@@ -14,10 +14,12 @@ describe('Pattern matching test for heuristic analysis module', () => {
 
     it('Vulnerability not detected', () => {
         assert.equal(ha.matchDomain("abc.elb.amazonaws.com") , 0);
+        assert.equal(ha.matchDomain("abc.newcloudapp.net") , 0);
     });
 
     it('Vulnerability detected (Azure domain)', () => {
         assert.equal(ha.matchDomain("testning.cloudapp.net") , 1);
+        assert.equal(ha.matchDomain("testning.uniqueid1203752.region.cloudapp.net") , 1);
     });
 
 });

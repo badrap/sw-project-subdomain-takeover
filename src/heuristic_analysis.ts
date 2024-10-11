@@ -33,7 +33,7 @@ export function matchDomain(domain: string) {
     }
 
     for (let d of list_of_domain) {
-        if (domain.match(d[0]))
+        if (domain.indexOf(d[0]) > -1)
             return 1;
     }
 
