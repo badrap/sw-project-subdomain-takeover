@@ -1,4 +1,4 @@
-/* To run this test:  mocha --reporter spec test/heuristic_analysis.test.ts */
+/* To run this test:  mocha --reporter spec test/heuristic_analysis.test.ts */ 
 import * as ha from "../src/heuristic_analysis" 
 import * as mocha from 'mocha'
 import * as chai from 'chai'
@@ -20,6 +20,10 @@ describe('Pattern matching test for heuristic analysis module', () => {
     it('Vulnerability detected (Azure domain)', () => {
         assert.equal(ha.matchDomain("testning.cloudapp.net") , 1);
         assert.equal(ha.matchDomain("testning.uniqueid1203752.region.cloudapp.net") , 1);
+    });
+
+    it('Vulnerability detected', () => {
+        assert.equal(ha.matchDomain("test.surveysparrow.com") , 1);
     });
 
 });
