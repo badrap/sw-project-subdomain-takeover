@@ -70,7 +70,7 @@ export async function checkForWebServer(domain: string) {
     } catch (error) {
         value = 0;
     } finally {
-        console.log(value);
+        //console.log(value);
         return value;
     }
 }
