@@ -4,6 +4,7 @@
 TODO: Load list of domains from can-i-take-over-xyz fingerprints.json */
 
 import * as listOfDomains from "./fingerprints.json";
+import axios from "axios";
 
 function seekDomain(cname: string[], domain: string) {
     if (cname.length == 0){
@@ -15,7 +16,7 @@ function seekDomain(cname: string[], domain: string) {
     cname.forEach(function (name) {
         //This needed for weeding out false positives.
         name = "."+name;
-        console.log(name + " " + domain + " " + domain.indexOf(name));
+        //console.log(name + " " + domain + " " + domain.indexOf(name));
         
         if (domain.indexOf(name) > -1) {
             rvalue = 1;
@@ -41,14 +42,35 @@ export function matchDomain(domain: string) {
 
    listOfDomains.forEach(function (d) {
         if (seekDomain(d.cname, domain) == 1){
-            console.log(d.vulnerable);
+            //console.log(d.vulnerable);
             if (d.status == "Vulnerable") {
                 rvalue = 1;
             }
         }
     })
 
-    console.log(rvalue);
+    //console.log(rvalue);
     return rvalue;
 
+}
+
+export async function checkForWebServer(domain: string) {
+    /* Checks if there is a web server answering from a given domain. */
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    let value: number = -1;
+    domain = "https://" + domain;
+    try {
+        const response = await axios.get(domain);
+        //await delay(1950);
+        if (response.status <= 500) {
+            value = 1;
+        } else {
+            value = 0;
+        }
+    } catch (error) {
+        value = 0;
+    } finally {
+        console.log(value);
+        return value;
+    }
 }
