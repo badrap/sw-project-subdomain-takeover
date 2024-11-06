@@ -1,4 +1,4 @@
-/* To run this test:  mocha --reporter spec test/heuristic_analysis.test.ts */ 
+/* To run this test:  mocha --reporter spec test/heuristic_analysis.test.ts */
 import * as ha from "../src/heuristic_analysis";
 import * as mocha from 'mocha';
 import * as chai from 'chai';
@@ -10,6 +10,12 @@ describe('Pattern matching test for heuristic analysis module', () => {
     it('Empty and incorrect domain names test', () => {
         assert.equal(ha.matchDomain("") , -1);
         assert.equal(ha.matchDomain("a") , -1);
+    });
+
+    it('Parser should allow valid domains', () => {
+        assert.equal(ha.matchDomain("xn--c1yn36fstackoverflow.com"), 0);
+        assert.equal(ha.matchDomain("stackoverflow.xn--c1yn36fcom"), 0);
+        assert.equal(ha.matchDomain("p.co"), 0);
     });
 
     it('Vulnerability not detected', () => {
@@ -46,4 +52,3 @@ describe('Testing if there is a webserver or not', () => {
 
 
 });
-
