@@ -38,14 +38,14 @@ describe('Testing if there is a webserver or not', () => {
 
     it('No webserver found', () => {
        // assert.equal(ha.checkForWebServer("test.local"), 0);
-        return ha.checkForWebServer("test.local").then(result => {
+        return ha.checkForWebServer("https", "test.local").then(result => {
             assert.equal(result, 0);
         });
     });
 
     it('Webserver found', () => {
         //assert.equal(ha.checkForWebServer("scholar.google.com"), 1);
-        return ha.checkForWebServer("scholar.google.com").then(result => {
+        return ha.checkForWebServer("https", "scholar.google.com").then(result => {
             assert.equal(result, 1);
         });
     });

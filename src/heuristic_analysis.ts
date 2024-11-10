@@ -41,11 +41,11 @@ export function matchDomain(domain: string) {
     return 0;
 }
 
-export async function checkForWebServer(domain: string) {
+export async function checkForWebServer(protocol: string, domain: string) {
     /* Checks if there is a web server answering from a given domain. */
     const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
     let value: number = -1;
-    const url = `https://${domain}`;
+    const url = `${protocol}://${domain}`;
 
     try {
         const response = await axios.get(url);
