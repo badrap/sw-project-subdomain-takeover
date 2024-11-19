@@ -5,6 +5,7 @@ TODO: Load list of domains from can-i-take-over-xyz fingerprints.json */
 
 import * as listOfDomains from "./fingerprints.json";
 import axios from "axios";
+import ping from "ping";
 
 function seekDomain(cname: string[], domain: string) {
     if (cname.length == 0){
@@ -56,5 +57,20 @@ export async function checkForWebServer(protocol: string, domain: string) {
     } finally {
         //console.log(value);
         return value;
+    }
+}
+
+export async function pingServer(server: string) {
+    // Function from: https://medium.com/@abhipillai/how-to-ping-ip-address-using-typescript-565105b7f6fa
+    try {
+        const response = await ping.promise.probe(server);
+        if (response.alive) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error("Error in pinging: " + error);
+        return false;
     }
 }

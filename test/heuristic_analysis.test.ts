@@ -50,5 +50,19 @@ describe('Testing if there is a webserver or not', () => {
         });
     });
 
+    it('No server found with echo', () => {
+        // assert.equal(ha.checkForWebServer("test.local"), 0);
+         return ha.pingServer("172.0.0.2").then(result => {
+             assert.equal(result, false);
+         });
+     });
+ 
+     it('Server found with echo', () => {
+         //assert.equal(ha.checkForWebServer("scholar.google.com"), 1);
+         return ha.pingServer("8.8.8.8").then(result => {
+             assert.equal(result, true);
+         });
+     });
+
 
 });
