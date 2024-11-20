@@ -12,7 +12,8 @@
     "chai": "^5.1.1",
     "mocha": "^10.7.3",
     "tsx": "^4.19.1",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "tldts": "^6.1.58"
   },
   "scripts": {
     "test": "mocha test/**"
