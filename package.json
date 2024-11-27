@@ -11,9 +11,9 @@
     "@types/node": "^22.9.0",
     "chai": "^5.1.1",
     "mocha": "^10.7.3",
+    "tldts": "^6.1.58",
     "tsx": "^4.19.1",
-    "typescript": "^5.6.2",
-    "tldts": "^6.1.58"
+    "typescript": "^5.6.2"
   },
   "scripts": {
     "test": "mocha test/**"
@@ -23,6 +23,6 @@
     "ping": "^0.4.4",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2",
-    "whois": "^2.14.2"
+    "whois-parsed": "^1.0.8"
   }
 }
