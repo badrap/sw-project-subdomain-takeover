@@ -1,0 +1,21 @@
+{
+  "bracketSpacing": true,
+  "semi": true,
+  "singleQuote": true,
+  "printWidth": 120,
+  "tabWidth": 4,
+  "embeddedLanguageFormatting": "auto",
+  "overrides": [
+    {
+      "files": ["*.js", "*.ts"],
+      "options": {
+        "bracketSpacing": true,
+        "semi": true,
+        "singleQuote": true,
+        "printWidth": 120,
+        "tabWidth": 4,
+        "embeddedLanguageFormatting": "auto"
+      }
+    }
+  ]
+}
