@@ -3,6 +3,6 @@
 import * as whoisParsed from 'whois-parsed';
 
 export async function checkFQDM(domain: string) {
-  const result = await whoisParsed.lookup(domain);
-  console.log(JSON.stringify(result, null, 2));
+    const result = await whoisParsed.lookup(domain);
+    console.log(JSON.stringify(result, null, 2));
 }

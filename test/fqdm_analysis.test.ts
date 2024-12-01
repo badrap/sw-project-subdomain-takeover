@@ -5,7 +5,7 @@ import * as chai from 'chai';
 var assert = chai.assert;
 
 describe('FQDM analysis test', () => {
-  it('Empty and incorrect domain names test', () => {
-    assert.equal(fqdm.checkFQDM('bbc.co.uk'), -1);
-  });
+    it('Empty and incorrect domain names test', () => {
+        assert.equal(fqdm.checkFQDM('bbc.co.uk'), -1);
+    });
 });
