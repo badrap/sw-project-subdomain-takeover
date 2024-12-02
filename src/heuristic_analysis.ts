@@ -7,14 +7,20 @@ import * as listOfDomains from './fingerprints.json';
 import axios from 'axios';
 import ping from 'ping';
 
-function seekDomain(cname: string[], domain: string) {
+/**
+ * Seeks the domain in the list of CNAMEs.
+ * @param {string[]} cname - List of CNAMEs.
+ * @param {string} domain - The domain to check.
+ * @returns {number} - 1 if the domain is found, otherwise 0.
+ */
+function seekDomain(cname: string[], domain: string): number {
     if (cname.length == 0) {
         return 0;
     }
 
     //TODO: Needs some other way to crawl through the list. Now loops through the full list without breaking when a positive result found. I tried returning out of the function, but the forEach function loop eats the return.
     for (const name of cname) {
-        if (domain.indexOf('.' + name) > -1) {
+        if (domain.includes(`.${name}`)) {
             return 1;
         }
     }
@@ -22,7 +28,12 @@ function seekDomain(cname: string[], domain: string) {
     return 0;
 }
 
-export function matchDomain(domain: string) {
+/**
+ * Matches the domain against a list of known vulnerable domains.
+ * @param {string} domain - The domain to check.
+ * @returns {number} - 1 if the domain is vulnerable, 0 if not, -1 if invalid.
+ */
+export function matchDomain(domain: string): number {
     let parsedDomain: string;
     try {
         parsedDomain = new URL('https://' + domain).hostname;
@@ -42,33 +53,37 @@ export function matchDomain(domain: string) {
     return 0;
 }
 
-export async function checkForWebServer(protocol: string, domain: string) {
+/**
+ * Checks if there is a web server answering from a given domain.
+ * @param {string} protocol - The protocol to use (http or https).
+ * @param {string} domain - The domain to check.
+ * @returns {Promise<number>} - 1 if a web server is found, otherwise 0.
+ */
+export async function checkForWebServer(protocol: string, domain: string): Promise<number> {
     /* Checks if there is a web server answering from a given domain. */
     const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
-    let value: number = -1;
     const url = `${protocol}://${domain}`;
 
     try {
         const response = await axios.get(url);
         // await delay(1950);
-        value = response.status <= 500 ? 1 : 0;
+        // console.log(response.status);
+        return response.status <= 500 ? 1 : 0;
     } catch (error) {
-        value = 0;
-    } finally {
-        //console.log(value);
-        return value;
+        return 0;
     }
 }
 
-export async function pingServer(server: string) {
+/**
+ * Pings a server to check if it is alive.
+ * @param {string} server - The server to ping.
+ * @returns {Promise<boolean>} - True if the server is alive, otherwise false.
+ */
+export async function pingServer(server: string): Promise<boolean> {
     // Function from: https://medium.com/@abhipillai/how-to-ping-ip-address-using-typescript-565105b7f6fa
     try {
         const response = await ping.promise.probe(server);
-        if (response.alive) {
-            return true;
-        } else {
-            return false;
-        }
+        return response.alive ? true : false;
     } catch (error) {
         console.error('Error in pinging: ' + error);
         return false;
