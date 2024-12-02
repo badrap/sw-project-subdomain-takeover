@@ -3,13 +3,13 @@
   "semi": true,
   "singleQuote": true,
   "printWidth": 120,
-  "tabWidth": 2,
+  "tabWidth": 4,
   "embeddedLanguageFormatting": "auto",
   "overrides": [
     {
-      "files": ["*.js", "*.ts"],
+      "files": ["*.json", "*.yml", ".prettierrc"],
       "options": {
-        "tabWidth": 4
+        "tabWidth": 2
       }
     }
   ]
