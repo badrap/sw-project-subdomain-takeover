@@ -7,14 +7,9 @@
   "embeddedLanguageFormatting": "auto",
   "overrides": [
     {
-      "files": ["*.js", "*.ts"],
+      "files": ["*.json", "*.yml", ".prettierrc"],
       "options": {
-        "bracketSpacing": true,
-        "semi": true,
-        "singleQuote": true,
-        "printWidth": 120,
-        "tabWidth": 4,
-        "embeddedLanguageFormatting": "auto"
+        "tabWidth": 2
       }
     }
   ]
