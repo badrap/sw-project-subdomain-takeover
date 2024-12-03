@@ -7,7 +7,30 @@ import * as whoisParsed from 'whois-parsed';
  * @param {string} domain - The domain name to check.
  */
 export async function checkFQDM(domain: string) {
-    const result = await whoisParsed.lookup(domain);
-    console.log(JSON.stringify(result, null, 2));
-    // TODO: The function currently does not return any value, making it difficult to test.
+    let result = {
+        err: false,
+        errInfo: "",
+        domain_registered: false,
+        expired: false,
+        expiring_soon: false,
+        domain_bot_controlled: false,
+    }
+
+    try {
+        const whoisResult = await whoisParsed.lookup(domain);
+        
+        const whoisTime = Date.parse(whoisResult.expirationDate);
+
+        if ( whoisTime <= Date.now() ) {
+            result.expired = true;
+            result.expiring_soon = true;
+        } else if (whoisTime <= Date.now() + 2629746000) {
+            result.expiring_soon = true;
+        }
+
+    } catch (error) {
+        result.err = true;
+        result.errInfo = error;
+        return result;
+    }
 }
