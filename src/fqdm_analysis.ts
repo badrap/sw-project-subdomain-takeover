@@ -6,7 +6,7 @@ import * as whoisParsed from 'whois-parsed';
  * Checks the Fully Qualified Domain Name (FQDM) to ensure it isn't dangling or about to be dangling.
  * @param {string} domain - The domain name to check.
  */
-export async function checkFQDM(domain: string) {
+export async function checkFQDM(domain: string): Promise<{err,errInfo,domain_registered,expired,expiring_soon,domain_bot_controlled}> {
     let result = {
         err: false,
         errInfo: "",
