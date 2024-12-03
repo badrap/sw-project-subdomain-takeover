@@ -1,2 +1,4 @@
 .vscode/
 node_modules/
+demo/webserver/dist/
+demo/webserver/database.db
