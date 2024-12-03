@@ -35,14 +35,14 @@ describe('Pattern matching test for heuristic analysis module', () => {
 describe('Testing if there is a webserver or not', () => {
     it('No webserver found', () => {
         // assert.equal(ha.checkForWebServer("test.local"), 0);
-        return ha.checkForWebServer('https', 'test.local').then((result) => {
+        return ha.checkForOnlineWebServer('https', 'test.local').then((result) => {
             assert.equal(result, 0);
         });
     });
 
     it('Webserver found', () => {
         //assert.equal(ha.checkForWebServer("scholar.google.com"), 1);
-        return ha.checkForWebServer('https', 'scholar.google.com').then((result) => {
+        return ha.checkForOnlineWebServer('https', 'scholar.google.com').then((result) => {
             assert.equal(result, 1);
         });
     });
