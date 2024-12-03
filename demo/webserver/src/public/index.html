@@ -1,55 +1,144 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Register and Login</title>
-  </head>
-  <body>
-    <h1>Register</h1>
-    <form id="registerForm">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required />
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required />
-      <button type="submit">Register</button>
-    </form>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Register and Login</title>
+    </head>
+    <body>
+        <h1>Register</h1>
+        <form id="registerForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required />
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+            <button type="submit">Register</button>
+        </form>
 
-    <h1>Login</h1>
-    <form id="loginForm">
-      <label for="loginUsername">Username:</label>
-      <input type="text" id="loginUsername" name="username" required />
-      <label for="loginPassword">Password:</label>
-      <input type="password" id="loginPassword" name="password" required />
-      <button type="submit">Login</button>
-    </form>
+        <h1>Login</h1>
+        <form id="loginForm">
+            <label for="loginUsername">Username:</label>
+            <input type="text" id="loginUsername" name="username" required />
+            <label for="loginPassword">Password:</label>
+            <input type="password" id="loginPassword" name="password" required />
+            <button type="submit">Login</button>
+        </form>
 
-    <script>
-      document.getElementById('registerForm').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const username = event.target.username.value;
-        const password = event.target.password.value;
-        const response = await fetch('/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password }),
-        });
-        const result = await response.json();
-        alert(result.message || 'Registered successfully');
-      });
+        <hr />
 
-      document.getElementById('loginForm').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const username = event.target.username.value;
-        const password = event.target.password.value;
-        const response = await fetch('/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password }),
-        });
-        const result = await response.json();
-        alert(result.message || 'Login successful');
-      });
-    </script>
-  </body>
+        <h1>Scan Domain</h1>
+        <form id="scanDomainForm">
+            <label for="scanDomain">Domain:</label>
+            <input type="text" id="scanDomain" name="scanDomain" required />
+            <button type="submit">Scan Domain</button>
+        </form>
+        <div id="scanResults"></div>
+
+        <hr />
+
+        <div id="userActions" style="display: none">
+            <h1>Domains</h1>
+            <button id="getDomains">Get All Domains</button>
+            <ul id="domainsList"></ul>
+
+            <h1>Add Domain</h1>
+            <form id="addDomainForm">
+                <label for="domain">Domain:</label>
+                <input type="text" id="domain" name="domain" required />
+                <button type="submit">Add Domain</button>
+            </form>
+
+            <h1>Get Domain</h1>
+            <form id="getDomainForm">
+                <label for="domainId">Domain ID:</label>
+                <input type="number" id="domainId" name="domainId" required />
+                <button type="submit">Get Domain</button>
+            </form>
+            <div id="domainDetails"></div>
+        </div>
+
+        <script>
+            let userId;
+
+            document.getElementById('registerForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const username = event.target.username.value;
+                const password = event.target.password.value;
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password }),
+                });
+                const result = await response.json();
+                alert(result.message || 'Registered successfully');
+            });
+
+            document.getElementById('loginForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const username = event.target.username.value;
+                const password = event.target.password.value;
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password }),
+                });
+                const result = await response.json();
+                if (result.userId) {
+                    userId = result.userId;
+                    document.getElementById('userActions').style.display = 'block';
+                }
+                alert(result.message || 'Login successful');
+            });
+
+            document.getElementById('getDomains').addEventListener('click', async () => {
+                const response = await fetch(`/domains?userId=${userId}`);
+                const domains = await response.json();
+                const domainsList = document.getElementById('domainsList');
+                domainsList.innerHTML = '';
+                domains.forEach((domain) => {
+                    const li = document.createElement('li');
+                    li.textContent = `ID: ${domain.id}, Domain: ${domain.domain}`;
+                    domainsList.appendChild(li);
+                });
+            });
+
+            document.getElementById('addDomainForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const domain = event.target.domain.value;
+                const response = await fetch('/domain', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, domain }),
+                });
+                const result = await response.json();
+                alert(result.message || 'Domain added successfully');
+            });
+
+            document.getElementById('getDomainForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const domainId = event.target.domainId.value;
+                const response = await fetch(`/domain/${domainId}?userId=${userId}`);
+                const domain = await response.json();
+                const domainDetails = document.getElementById('domainDetails');
+                if (domain.id) {
+                    domainDetails.textContent = `ID: ${domain.id}, Domain: ${domain.domain}`;
+                } else {
+                    domainDetails.textContent = domain.message;
+                }
+            });
+
+            document.getElementById('scanDomainForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const domain = event.target.scanDomain.value;
+                const response = await fetch('/scan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, domain }),
+                });
+                const result = await response.json();
+                const scanResults = document.getElementById('scanResults');
+                scanResults.innerHTML = `<h2>Scan Results</h2><pre>${JSON.stringify(result, null, 2)}</pre>`;
+            });
+        </script>
+    </body>
 </html>
