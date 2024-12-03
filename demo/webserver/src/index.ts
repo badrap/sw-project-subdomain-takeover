@@ -9,6 +9,7 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// TODO: Ideally putting configuration for this in .env file
 const publicLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 10, // Limit each IP to 10 requests per windowMs
