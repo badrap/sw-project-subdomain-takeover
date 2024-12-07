@@ -1,0 +1,20 @@
+# ignore file while building image (not running)
+# ~ .gitignore: the easy rule of thumb is to only copy files that you would push to GitHub 
+*.git/
+*.gitignore
+*node_modules/
+*build/
+*dist/
+*.env*
+
+*.eslint*.js
+*.eslintignore
+*.prettierrc
+
+*database.db
+
+*.dockerignore
+*Dockerfile
+*dev.Dockerfile
+*docker-compose.yml
+*docker-compose.dev.yml
