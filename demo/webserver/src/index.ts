@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { openDb } from './database';
+import { openDb, initializeDb } from './database';
 import path from 'path';
 import rateLimit from 'express-rate-limit';
 import { matchDomain } from '../../../src/heuristic_analysis';
@@ -9,7 +9,6 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// TODO: Ideally putting configuration for this in .env file
 const publicLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 10, // Limit each IP to 10 requests per windowMs
@@ -22,13 +21,17 @@ const userLimiter = rateLimit({
     message: 'Too many requests from this IP, please try again later.',
 });
 
+initializeDb()
+    .then(() => {
+        console.log('Database initialized');
+    })
+    .catch((error) => {
+        console.error('Error initializing database:', error);
+    });
+
 app.post('/register', async (req: Request, res: Response) => {
     const { username, password } = req.body;
     const db = await openDb();
-    await db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT)');
-    await db.run(
-        'CREATE TABLE IF NOT EXISTS domains (id INTEGER PRIMARY KEY, user_id INTEGER, domain TEXT, FOREIGN KEY(user_id) REFERENCES users(id))',
-    );
 
     const existingUser = await db.get('SELECT username FROM users WHERE username = ?', [username]);
     if (existingUser) {
@@ -70,19 +73,24 @@ app.get('/domain/:num', async (req: Request, res: Response) => {
 });
 
 app.post('/domain', async (req: Request, res: Response) => {
-    const { userId, domain } = req.body;
+    const { userId, domain, status } = req.body;
     const db = await openDb();
-    const result = await db.run('INSERT INTO domains (user_id, domain) VALUES (?, ?)', [userId, domain]);
-    res.status(201).json({ id: result.lastID, domain });
+    const result = await db.run('INSERT INTO domains (user_id, domain, status) VALUES (?, ?, ?)', [
+        userId,
+        domain,
+        status,
+    ]);
+    res.status(201).json({ id: result.lastID, domain, status });
 });
 
 app.put('/domain/:num', async (req: Request, res: Response) => {
     const userId = req.body.userId;
     const domainId = req.params.num;
-    const { domain } = req.body;
+    const { domain, status } = req.body;
     const db = await openDb();
-    const result = await db.run('UPDATE domains SET domain = ? WHERE user_id = ? AND id = ?', [
+    const result = await db.run('UPDATE domains SET domain = ?, status = ? WHERE user_id = ? AND id = ?', [
         domain,
+        status,
         userId,
         domainId,
     ]);
@@ -125,7 +133,8 @@ app.get('/', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-const port = 3000;
+const port = process.env.PORT || 3000;
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });

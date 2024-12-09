@@ -3,59 +3,197 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Register and Login</title>
+        <title>Demo</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+        <style>
+            body {
+                padding-top: 50px;
+            }
+            .container {
+                max-width: 1200px;
+            }
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+            .form-control {
+                margin-bottom: 0.5rem;
+            }
+            .btn {
+                margin-top: 1rem;
+            }
+            .results {
+                margin-top: 2rem;
+            }
+            .card:hover {
+                border-color: blue;
+            }
+            .table-bordered {
+                border: 1px solid #ced4da;
+            }
+            .table-bordered th,
+            .table-bordered td {
+                border: 1px solid #ced4da;
+            }
+            .bordered {
+                padding: 1rem;
+                border-radius: 0.25rem;
+            }
+        </style>
     </head>
     <body>
-        <h1>Register</h1>
-        <form id="registerForm">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required />
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required />
-            <button type="submit">Register</button>
-        </form>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <h2>Scan Domain</h2>
+                            <form id="scanDomainForm">
+                                <div class="form-group">
+                                    <label for="scanDomain">Domain:</label>
+                                    <input
+                                        type="text"
+                                        id="scanDomain"
+                                        name="scanDomain"
+                                        class="form-control"
+                                        required
+                                    />
+                                </div>
+                                <button type="submit" class="btn btn-primary">Scan Domain</button>
+                            </form>
+                            <div id="scanResults" class="results"></div>
+                        </div>
+                    </div>
 
-        <h1>Login</h1>
-        <form id="loginForm">
-            <label for="loginUsername">Username:</label>
-            <input type="text" id="loginUsername" name="username" required />
-            <label for="loginPassword">Password:</label>
-            <input type="password" id="loginPassword" name="password" required />
-            <button type="submit">Login</button>
-        </form>
+                    <div id="userActions" style="display: none">
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <h2>Domains</h2>
+                                <button id="getDomains" class="btn btn-secondary mb-3">Get All Domains</button>
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Domain</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="domainsList"></tbody>
+                                </table>
+                            </div>
+                        </div>
 
-        <hr />
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <h2>Add Domain</h2>
+                                <form id="addDomainForm">
+                                    <div class="form-group">
+                                        <label for="domain">Domain:</label>
+                                        <input type="text" id="domain" name="domain" class="form-control" required />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Add Domain</button>
+                                </form>
+                            </div>
+                        </div>
 
-        <h1>Scan Domain</h1>
-        <form id="scanDomainForm">
-            <label for="scanDomain">Domain:</label>
-            <input type="text" id="scanDomain" name="scanDomain" required />
-            <button type="submit">Scan Domain</button>
-        </form>
-        <div id="scanResults"></div>
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <h2>Get Domain</h2>
+                                <form id="getDomainForm">
+                                    <div class="form-group">
+                                        <label for="domainId">Domain ID:</label>
+                                        <input
+                                            type="number"
+                                            id="domainId"
+                                            name="domainId"
+                                            class="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Get Domain</button>
+                                </form>
+                                <div id="domainDetails" class="results">
+                                    <table class="table table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Domain</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="domainDetailsList"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <hr />
+                <div class="col-md-4">
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <button id="toggleForm" class="btn btn-secondary btn-block mb-4">Switch to Register</button>
+                            <div id="loginCard">
+                                <form id="loginForm">
+                                    <div class="form-group">
+                                        <label for="loginUsername">Username:</label>
+                                        <input
+                                            type="text"
+                                            id="loginUsername"
+                                            name="username"
+                                            class="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="loginPassword">Password:</label>
+                                        <input
+                                            type="password"
+                                            id="loginPassword"
+                                            name="password"
+                                            class="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Login</button>
+                                </form>
+                            </div>
 
-        <div id="userActions" style="display: none">
-            <h1>Domains</h1>
-            <button id="getDomains">Get All Domains</button>
-            <ul id="domainsList"></ul>
-
-            <h1>Add Domain</h1>
-            <form id="addDomainForm">
-                <label for="domain">Domain:</label>
-                <input type="text" id="domain" name="domain" required />
-                <button type="submit">Add Domain</button>
-            </form>
-
-            <h1>Get Domain</h1>
-            <form id="getDomainForm">
-                <label for="domainId">Domain ID:</label>
-                <input type="number" id="domainId" name="domainId" required />
-                <button type="submit">Get Domain</button>
-            </form>
-            <div id="domainDetails"></div>
+                            <div id="registerCard" style="display: none">
+                                <form id="registerForm">
+                                    <div class="form-group">
+                                        <label for="username">Username:</label>
+                                        <input
+                                            type="text"
+                                            id="username"
+                                            name="username"
+                                            class="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password">Password:</label>
+                                        <input
+                                            type="password"
+                                            id="password"
+                                            name="password"
+                                            class="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Register</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Bootstrap JS and dependencies -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
         <script>
             let userId;
@@ -96,9 +234,9 @@
                 const domainsList = document.getElementById('domainsList');
                 domainsList.innerHTML = '';
                 domains.forEach((domain) => {
-                    const li = document.createElement('li');
-                    li.textContent = `ID: ${domain.id}, Domain: ${domain.domain}`;
-                    domainsList.appendChild(li);
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${domain.id}</td><td>${domain.domain}</td><td>${domain.status}</td>`;
+                    domainsList.appendChild(row);
                 });
             });
 
@@ -119,11 +257,16 @@
                 const domainId = event.target.domainId.value;
                 const response = await fetch(`/domain/${domainId}?userId=${userId}`);
                 const domain = await response.json();
-                const domainDetails = document.getElementById('domainDetails');
+                const domainDetailsList = document.getElementById('domainDetailsList');
+                domainDetailsList.innerHTML = '';
                 if (domain.id) {
-                    domainDetails.textContent = `ID: ${domain.id}, Domain: ${domain.domain}`;
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${domain.id}</td><td>${domain.domain}</td><td>${domain.status}</td>`;
+                    domainDetailsList.appendChild(row);
                 } else {
-                    domainDetails.textContent = domain.message;
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="3">${domain.message}</td>`;
+                    domainDetailsList.appendChild(row);
                 }
             });
 
@@ -138,6 +281,22 @@
                 const result = await response.json();
                 const scanResults = document.getElementById('scanResults');
                 scanResults.innerHTML = `<h2>Scan Results</h2><pre>${JSON.stringify(result, null, 2)}</pre>`;
+            });
+
+            document.getElementById('toggleForm').addEventListener('click', () => {
+                const loginCard = document.getElementById('loginCard');
+                const registerCard = document.getElementById('registerCard');
+                const toggleButton = document.getElementById('toggleForm');
+
+                if (loginCard.style.display === 'none') {
+                    loginCard.style.display = 'block';
+                    registerCard.style.display = 'none';
+                    toggleButton.textContent = 'Switch to Register';
+                } else {
+                    loginCard.style.display = 'none';
+                    registerCard.style.display = 'block';
+                    toggleButton.textContent = 'Switch to Login';
+                }
             });
         </script>
     </body>
