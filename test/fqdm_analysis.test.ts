@@ -6,6 +6,8 @@ var assert = chai.assert;
 
 describe('FQDM analysis test', () => {
     it('Empty and incorrect domain names test', () => {
-        assert.equal(fqdm.checkFQDM('bbc.co.uk'), -1);
+        return fqdm.checkFQDM('.io').then((result) => {
+            assert.equal(result.err, true);
+        });
     });
 });
