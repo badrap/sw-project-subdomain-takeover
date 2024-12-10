@@ -117,3 +117,61 @@ export async function pingServer(server: string): Promise<boolean> {
         return false;
     }
 }
+
+/** 
+ *  
+ **/ 
+export async function checkForFingerprint(domain: string): Promise<{dangling: Boolean, error: String}> {
+    let result = {
+        dangling: false,
+        error: ""
+    };
+    let parsedDomain: string;
+    
+    try {
+        parsedDomain = new URL('https://' + domain).hostname;
+        if (!parsedDomain || parsedDomain.split('.').length < 2) {
+            result.error = "Not a domain";
+            //console.log(result.error);
+            return result;
+        }
+    } catch (error) {
+        result.error = "Domain parsing failed with an error " + error;
+        //console.log(result.error);
+        return result;
+    }
+
+    let fingerprint;
+
+    for (const d of listOfDomains) {
+        if (seekDomain(d.cname, parsedDomain) === 1) {
+            fingerprint = d.fingerprint;
+            break;
+        }
+    }
+
+    if (fingerprint == "NXDOMAIN") {
+        try {
+            const getResult = await axios.get("https://" + parsedDomain);
+            if (!getResult.data && getResult.data.length === 0) {
+                result.dangling = true;
+            }
+        } catch (error) {
+            //console.log(error);
+            if (error.code == "ENOTFOUND")
+                result.dangling = true;
+        }
+    } else {
+        try {
+            const getResult = await axios.get("https://" + parsedDomain);
+            if ( JSON.stringify(getResult.data).includes(fingerprint))
+                result.dangling = true;
+        } catch (error) {
+            if (error.response.data.includes(fingerprint))
+                result.dangling = true;
+            result.error = error;
+        }
+    }
+
+    return result;
+}

@@ -61,3 +61,34 @@ describe('Testing if there is a webserver or not', () => {
         });
     });
 });
+
+describe('Check for Fingerprint', () => {
+    it('Check for fingerprint test DANGLING NXDOMAIN', () => {
+        //Very flakey
+        return ha.checkForFingerprint('uusitestivapaa.azurewebsites.net').then((result) => {
+            assert.equal(result.dangling, true);
+        });
+    });
+
+    it('Check for fingerprint test not dangling but offline', () => {
+        //Very flakey
+        return ha.checkForFingerprint('uusi.azurewebsites.net').then((result) => {
+            assert.equal(result.dangling, false);
+        });
+    });
+
+    it('Check for fingerprint test DANGLING OTHER FINGERPRINT', () => {
+        //Very flakey
+        return ha.checkForFingerprint('aaa.bitbucket.io').then((result) => {
+            assert.equal(result.dangling, true);
+        });
+    });
+
+    it('Check for fingerprint test not dangling', () => {
+        //Very flakey
+        return ha.checkForFingerprint('dretools.bitbucket.io').then((result) => {
+            assert.equal(result.dangling, false);
+        });
+    });
+    
+});
