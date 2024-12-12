@@ -10,9 +10,7 @@ services:
     volumes:
       # - .:/app
       - ./demo/webserver/database.db:/app/demo/webserver/database.db
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    command: npm run dev
+    command: npm run start
 
 volumes:
   db-data:

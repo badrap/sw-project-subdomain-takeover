@@ -12,10 +12,9 @@ WORKDIR /app
 COPY . .
 
 WORKDIR /app/demo/webserver
-ENV CHOKIDAR_USEPOLLING=true
 EXPOSE 3000
-# CMD ["npx", "ts-node-dev", "src/index.ts"]
-CMD ["npm", "run", "dev"]
+RUN npm run build
+CMD ["npm", "run", "start"]
 
 # docker build -t webserver .
 # docker run -p 3000:3000 webserver
