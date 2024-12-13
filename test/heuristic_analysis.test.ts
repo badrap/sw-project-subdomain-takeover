@@ -90,5 +90,4 @@ describe('Check for Fingerprint', () => {
             assert.equal(result.dangling, false);
         });
     });
-    
 });
