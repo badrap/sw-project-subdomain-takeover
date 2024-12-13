@@ -118,25 +118,25 @@ export async function pingServer(server: string): Promise<boolean> {
     }
 }
 
-/** 
- *  
- **/ 
-export async function checkForFingerprint(domain: string): Promise<{dangling: Boolean, error: String}> {
+/**
+ *
+ **/
+export async function checkForFingerprint(domain: string): Promise<{ dangling: Boolean; error: String }> {
     let result = {
         dangling: false,
-        error: ""
+        error: '',
     };
     let parsedDomain: string;
-    
+
     try {
         parsedDomain = new URL('https://' + domain).hostname;
         if (!parsedDomain || parsedDomain.split('.').length < 2) {
-            result.error = "Not a domain";
+            result.error = 'Not a domain';
             //console.log(result.error);
             return result;
         }
     } catch (error) {
-        result.error = "Domain parsing failed with an error " + error;
+        result.error = 'Domain parsing failed with an error ' + error;
         //console.log(result.error);
         return result;
     }
@@ -150,25 +150,22 @@ export async function checkForFingerprint(domain: string): Promise<{dangling: Bo
         }
     }
 
-    if (fingerprint == "NXDOMAIN") {
+    if (fingerprint == 'NXDOMAIN') {
         try {
-            const getResult = await axios.get("https://" + parsedDomain);
+            const getResult = await axios.get('https://' + parsedDomain);
             if (!getResult.data && getResult.data.length === 0) {
                 result.dangling = true;
             }
         } catch (error) {
             //console.log(error);
-            if (error.code == "ENOTFOUND")
-                result.dangling = true;
+            if (error.code == 'ENOTFOUND') result.dangling = true;
         }
     } else {
         try {
-            const getResult = await axios.get("https://" + parsedDomain);
-            if ( JSON.stringify(getResult.data).includes(fingerprint))
-                result.dangling = true;
+            const getResult = await axios.get('https://' + parsedDomain);
+            if (JSON.stringify(getResult.data).includes(fingerprint)) result.dangling = true;
         } catch (error) {
-            if (error.response.data.includes(fingerprint))
-                result.dangling = true;
+            if (error.response.data.includes(fingerprint)) result.dangling = true;
             result.error = error;
         }
     }
