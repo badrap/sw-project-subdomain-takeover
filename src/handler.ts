@@ -7,9 +7,9 @@ export function getThreatScore(domain: string) {
         : {
               isVulnerable: ha.matchDomain(domain) == 1 ? 'Yes' : 'No',
               isServer: ha.pingServer ? 'Yes' : 'No',
-              isWebServer: ha.checkForWebServer('https', domain)
+              isWebServer: ha.checkForAnyWebServer('https', domain)
                   ? 'Yes'
-                  : ha.checkForWebServer('http', domain)
+                  : ha.checkForAnyWebServer('http', domain)
                     ? 'Yes'
                     : 'No',
               parsedDomain: parse(domain),
