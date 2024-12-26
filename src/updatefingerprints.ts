@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
 
-async function updateFingerprintFile(): Promise<void> {
+export async function updateFingerprintFile(): Promise<void> {
     const downloadUrl = 'https://github.com/EdOverflow/can-i-take-over-xyz/blob/master/fingerprints.json';
     const dirPath = path.join(__dirname, 'src');
     const fingerprintPath = path.join(dirPath, 'fingerprints.json');
