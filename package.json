@@ -10,9 +10,11 @@
     "@types/mocha": "^10.0.9",
     "@types/node": "^22.9.0",
     "@types/ping": "^0.4.4",
+    "axios-mock-adapter": "^2.1.0",
     "chai": "^5.1.1",
     "mocha": "^10.7.3",
     "prettier": "^3.4.1",
+    "sinon": "^19.0.2",
     "tldts": "^6.1.58",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2"

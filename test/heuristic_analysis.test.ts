@@ -2,6 +2,10 @@
 import * as ha from '../src/heuristic_analysis';
 import * as mocha from 'mocha';
 import * as chai from 'chai';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import sinon from 'sinon';
+import ping from 'ping';
 
 var assert = chai.assert;
 
@@ -33,29 +37,43 @@ describe('Pattern matching test for heuristic analysis module', () => {
 });
 
 describe('Testing if there is a webserver or not', () => {
-    it('No webserver found', () => {
-        // assert.equal(ha.checkForWebServer("test.local"), 0);
-        return ha.checkForOnlineWebServer('https', 'test.local').then((result) => {
-            assert.equal(result, 0);
-        });
+    let mockAxios: MockAdapter;
+    let pingStub: sinon.SinonStub;
+
+    beforeEach(() => {
+        mockAxios = new MockAdapter(axios);
+        pingStub = sinon.stub(ping.promise, 'probe');
     });
 
-    it('Webserver found', () => {
-        //assert.equal(ha.checkForWebServer("scholar.google.com"), 1);
-        return ha.checkForOnlineWebServer('https', 'scholar.google.com').then((result) => {
-            assert.equal(result, 1);
-        });
+    afterEach(() => {
+        mockAxios.restore();
+        pingStub.restore();
+    });
+
+    it('No webserver found', async () => {
+        // Or we can also use axios.defaults.timeout = 4000;
+        mockAxios.onGet().timeout();
+
+        const result = await ha.checkForOnlineWebServer('https', 'test.local');
+        assert.equal(result, 0);
+    });
+
+    it('Webserver found', async () => {
+        mockAxios.onGet().reply(200);
+
+        const result = await ha.checkForOnlineWebServer('https', 'scholar.google.com');
+        assert.equal(result, 1);
     });
 
     it('No server found with echo', () => {
-        // assert.equal(ha.checkForWebServer("test.local"), 0);
+        pingStub.withArgs('172.0.0.2').resolves({ alive: false });
         return ha.pingServer('172.0.0.2').then((result) => {
             assert.equal(result, false);
         });
     });
 
     it('Server found with echo', () => {
-        //assert.equal(ha.checkForWebServer("scholar.google.com"), 1);
+        pingStub.withArgs('8.8.8.8').resolves({ alive: true });
         return ha.pingServer('8.8.8.8').then((result) => {
             assert.equal(result, true);
         });
