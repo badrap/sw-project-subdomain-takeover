@@ -9,8 +9,8 @@ export async function getDomainDetails(domain: string) {
     let FQDN_Analysis = await fqdn.checkFQDM(domain).then((token) => { return token })
     let status = getStatus(FQDN_Analysis)
 
-        
-    let result =  ha.matchDomain(domain) == -1? "Inconclusive": 
+
+    let result =  ha.matchDomain(domain) == -1? "Inconclusive":
     {
             isVulnerable: ha.matchDomain(domain) == 1? "Yes": "No",
             isServer: ha.pingServer? "Yes":"No",
@@ -32,4 +32,3 @@ export async function getDomainDetails(domain: string) {
         // else if (isDangling.dangling) return "Dangling"
         else return "Not vulnerable to dangling"
     }
-  
