@@ -3,26 +3,33 @@ import * as fqdn from "../src/fqdm_analysis";
 import { parse } from 'tldts'
 
 export async function getDomainDetails(domain: string) {
-    
-    return ha.matchDomain(domain) == -1? "Inconclusive": 
+
+    let isWebServer = await ha.checkForAnyWebServer("https",domain).then((token) => { return token })
+    let isOnlineWebServer =  await ha.checkForOnlineWebServer("https",domain).then((token) => { return token })
+    let FQDN_Analysis = await fqdn.checkFQDM(domain).then((token) => { return token })
+    let status = getStatus(FQDN_Analysis)
+
+        
+    let result =  ha.matchDomain(domain) == -1? "Inconclusive": 
     {
             isVulnerable: ha.matchDomain(domain) == 1? "Yes": "No",
             isServer: ha.pingServer? "Yes":"No",
-            isWebServer: await ha.checkForAnyWebServer("https",domain) == 1? "Yes": "Inconclusive",
-            isOnlineWebServer: await ha.checkForOnlineWebServer("https",domain) == 1? "Yes": "Inconclusive",
-            FQDN_Analysis: fqdn.checkFQDM(domain),
+            isWebServer: isWebServer == 1? "Yes": "Inconclusive",
+            isOnlineWebServer:isOnlineWebServer == 1? "Yes": "Inconclusive",
+            FQDN_Analysis: FQDN_Analysis,
             parsedDomain:parse(domain),
-            status: await getStatus(domain),
+            status: status,
             subdomainDetails: this.getDomainDetails(parse(domain).subdomain)
     }
 
-    async function getStatus(domain: string): Promise<string> {
-        let isDangling = await ha.checkForFingerprint(domain);
-        let fqdnAnalysis = await fqdn.checkFQDM(domain);
-        if (fqdnAnalysis.expired) return "Takeoverable"
-        else if (ha.matchDomain(domain) == 1) return "At Risk"
-        else if (isDangling.dangling) return "Dangling"
+    return result
+}
+
+    function getStatus(FQDN_Analysis): string {
+        // let isDangling = await ha.checkForFingerprint(domain).then((token) => { return token });
+        if (FQDN_Analysis.expired) return "Takeoverable"
+        else if (ha.matchDomain(FQDN_Analysis) == 1) return "At Risk"
+        // else if (isDangling.dangling) return "Dangling"
         else return "Not vulnerable to dangling"
     }
-    
-}
+  
